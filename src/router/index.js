@@ -130,6 +130,22 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/NewsManage',
+    component: Layout,
+    meta: { title: '新闻管理', icon: 'manage' },
+    children: [
+      {
+        path: 'newsList',
+        component: () => import('@/views/form/index'),
+        meta: { title: '新闻列表', icon: 'list' }
+      },
+      {
+        path: 'removeNews',
+        meta: { title: '添加新闻', icon: 'test' }
+      }
+    ]
+  },
 
   {
     path: 'external-link',
