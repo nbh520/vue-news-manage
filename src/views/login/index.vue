@@ -29,22 +29,21 @@
         </el-button>
       </el-form-item>
       <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: admin</span>
+        <span style="margin-right:20px;">管理员账号: admin</span>
+        <span> 管理员密码: admin</span>
       </div>
     </el-form>
   </div>
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
+      if (value.length < 4) {
+        callback(new Error('账号不能小于4位'))
       } else {
         callback()
       }
@@ -77,9 +76,6 @@ export default {
       },
       immediate: true
     }
-  },
-  mounted() {
-    console.log(this.$route)
   },
   methods: {
     showPwd() {

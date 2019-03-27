@@ -131,13 +131,13 @@ export const constantRouterMap = [
     ]
   },
   {
-    path: '/NewsManage',
+    path: '/newsManage',
     component: Layout,
     meta: { title: '新闻管理', icon: 'manage' },
     children: [
       {
         path: 'newsList',
-        component: () => import('@/views/form/index'),
+        component: () => import('@/views/newsManage/list'),
         meta: { title: '新闻列表', icon: 'list' }
       },
       {
