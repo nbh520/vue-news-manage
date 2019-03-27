@@ -146,7 +146,6 @@ export const constantRouterMap = [
       }
     ]
   },
-
   {
     path: 'external-link',
     component: Layout,
@@ -166,3 +165,27 @@ export default new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+
+export const asyncRoutes = [
+  {
+    path: '/adminManage',
+    component: Layout,
+    meta: {
+      title: '权限管理',
+      roles: ['admin']
+    },
+    children: [{
+        path: 'adminList',
+        meta: {
+          title: '管理员列表'
+        }
+      },
+      {
+        path: 'createAdmin',
+        meta: {
+          title: '添加管理员'
+        }
+      }
+    ]
+  }
+]
