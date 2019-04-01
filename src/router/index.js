@@ -39,6 +39,12 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/dashboard',
+    component: Layout,
+    meta: { title: '首页' }
+  },
+
+  {
     path: '/example',
     component: Layout,
     redirect: '/example/table',
@@ -138,13 +144,33 @@ export const constantRouterMap = [
       {
         path: 'newsList',
         component: () => import('@/views/newsManage/list'),
-        meta: { title: '新闻列表', icon: 'list' }
+        meta: { title: '新闻列表' }
       },
       {
         path: 'removeNews',
-        meta: { title: '添加新闻', icon: 'test' }
+        meta: { title: '添加新闻' }
       }
     ]
+  },
+  {
+    path: '/systemManage',
+    component: Layout,
+    meta: {
+      title: '系统管理',
+      roles: ['admin']
+    },
+    children: [{
+      path: 'character',
+      meta: {
+        title: '角色管理'
+      }
+    },
+    {
+      path: 'user',
+      meta: {
+        title: '用户管理'
+      }
+    }]
   },
   {
     path: 'external-link',
@@ -168,24 +194,23 @@ export default new Router({
 
 export const asyncRoutes = [
   {
-    path: '/adminManage',
+    path: '/systemManage',
     component: Layout,
     meta: {
-      title: '权限管理',
+      title: '系统管理',
       roles: ['admin']
     },
     children: [{
-        path: 'adminList',
-        meta: {
-          title: '管理员列表'
-        }
-      },
-      {
-        path: 'createAdmin',
-        meta: {
-          title: '添加管理员'
-        }
+      path: 'character',
+      meta: {
+        title: '角色管理'
       }
-    ]
+    },
+    {
+      path: 'user',
+      meta: {
+        title: '用户管理'
+      }
+    }]
   }
 ]
