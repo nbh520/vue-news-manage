@@ -6,6 +6,7 @@
 <script>
 import echarts from 'echarts'
 require('echarts/theme/macarons')
+import { debounce } from '@/utils'
 export default {
   name: 'LineChart',
   props: {
@@ -46,7 +47,30 @@ export default {
   },
   mounted() {
     this.initChart()
-    console.log(this.autoResize)
+    if (this.autoResize) {
+      this.__resizeHandler = debounce(() => {
+        if (this.chart) {
+          this.chart.resize()
+        }
+      }, 100)
+      window.addEventListener('resize', this.__resizeHandler)
+    }
+
+    // 监听侧边栏的变化
+    this.sidebarElm = document.getElementsByClassName('sidebar-container')[0]
+    this.sidebarElm && this.sidebarElm.addEventListener('transitionend', this.sidebarResizeHandler)
+  },
+  // 销毁chart
+  beforeDestroy() {
+    if (!this.chart) {
+      return
+    }
+    if (this.autoRize) {
+      window.removeEventListener('resize', this.__resizeHandler)
+    }
+    this.sidebarElm && this.sidebarElm.removeEventListener('transitionend', this.sidebarResizeHandler)
+    this.chart.dispose()
+    this.chart = null
   },
   methods: {
     setOptions({ expectedData, actualData } = {}) {
@@ -97,26 +121,31 @@ export default {
           animationEasing: 'cubicInOut'
         },
         {
-        name: 'actual',
-        smooth: true,
-        type: 'line',
-        itemStyle: {
-          normal: {
-            color: '#3888fa',
-            lineStyle: {
+          name: 'actual',
+          smooth: true,
+          type: 'line',
+          itemStyle: {
+            normal: {
               color: '#3888fa',
-              width: 2
-            },
-            areaStyle: {
-              color: '#f3f8ff'
+              lineStyle: {
+                color: '#3888fa',
+                width: 2
+              },
+              areaStyle: {
+                color: '#f3f8ff'
+              }
             }
-          }
-        },
-        data: actualData,
-        animationDuration: 2800,
-        animationEasing: 'quadraticOut'
+          },
+          data: actualData,
+          animationDuration: 2800,
+          animationEasing: 'quadraticOut'
         }]
       })
+    },
+    sidebarResizeHandler(e) {
+      if (e.propertyName === 'width') {
+        this.__resizeHandler()
+      }
     },
     initChart() {
       this.chart = echarts.init(this.$el, 'macarons')
