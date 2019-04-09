@@ -63,6 +63,14 @@ export default {
       return filters[this.visibility](this.todos)
     }
   },
+  watch: {
+    todos: {
+      deep: true,
+      handler() {
+        this.setLocalStorage()
+      }
+    }
+  },
   created() {
     const lastTodoList = JSON.parse(window.localStorage.getItem('todos'))
     const defalutList = [
@@ -87,26 +95,21 @@ export default {
         text,
         done: false
       })
-      this.setLocalStorage()
       e.target.value = ''
     },
     toggleAll({ done }) {
       this.todos.forEach(todo => {
         todo.done = done
-        this.setLocalStorage()
       })
     },
     toggleTodo(val) {
       val.done = !val.done
-      this.setLocalStorage()
     },
     deleteTodo(val) {
       this.todos.splice(this.todos.indexOf(val), 1)
-      this.setLocalStorage()
     },
     editTodo({ todo, value }) {
       todo.text = value
-      this.setLocalStorage()
     }
   }
 }

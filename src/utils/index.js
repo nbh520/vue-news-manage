@@ -33,3 +33,19 @@ export function debounce(func, wait, immediate) {
     return result
   }
 }
+
+// 对数组里的每个元素进行随机
+export function arrayEleRandom(arr) {
+  const newArr = []
+  arr.forEach(item => {
+    let ele
+    const sign = Math.floor(Math.random() * 2) ? 1 : -1
+    if (item > 10) {
+      ele = sign * Math.floor((item / 2) * Math.random()) + item
+    } else {
+      ele = Math.floor(Math.random() * 20) + item
+    }
+    newArr.push(ele)
+  })
+  return newArr
+}

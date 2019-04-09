@@ -21,3 +21,19 @@ export const articleList = query => {
     data: query
   })
 }
+
+// 获取文章总数
+export const articleLength = () => request({
+  url: 'article/getALLNewsLength',
+  method: 'get'
+})
+
+// 获取？天至今天的文章数
+export const getNewsDayLength = (day = 7) => request({
+  url: 'article/getNewsDayLength',
+  method: 'get',
+  params: {
+    day
+  }
+})
+
