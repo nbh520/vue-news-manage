@@ -6,3 +6,9 @@ export const getVideoDayLength = (day = 7) => request({
     day
   }
 })
+
+// 获取视频总数
+export const getALLVideoLength = () => request({
+  url: 'video/getALLVideoLength',
+  method: 'get'
+})

@@ -23,7 +23,7 @@ export default {
       default: '300px'
     },
     userAddress: {
-      type: Object,
+      type: Array,
       default: function() {
         return {}
       }

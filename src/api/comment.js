@@ -7,3 +7,9 @@ export const getCommentDayLength = (day = 7) => request({
     day
   }
 })
+
+// 获取评论总数
+export const getALLCommentLength = () => request({
+  url: 'comment/getALLCommentLength',
+  method: 'get'
+})

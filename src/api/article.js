@@ -37,3 +37,30 @@ export const getNewsDayLength = (day = 7) => request({
   }
 })
 
+// 根据id获取新闻内容
+export const getNewsById = (id) => request({
+  url: 'article/getNewsById',
+  method: 'get',
+  params: {
+    id
+  }
+})
+
+// 根据id将新闻的status改为del
+export const deleteNewsById = (id) => request({
+  url: 'article/deleteNewsById',
+  method: 'post',
+  data: {
+    id
+  }
+})
+
+// 根据id改变新闻的status值
+export const updateNewsStatusById = (id, status) => request({
+  url: 'article/updateNewsStatusById',
+  method: 'post',
+  data: {
+    id,
+    status
+  }
+})

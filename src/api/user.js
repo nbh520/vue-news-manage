@@ -13,3 +13,9 @@ export const queryUserAddress = () => request({
   url: 'user/queryUserAddress',
   method: 'get'
 })
+
+// 获取用户总数
+export const getALLUserLength = () => request({
+  url: 'user/getALLUserLength',
+  method: 'get'
+})

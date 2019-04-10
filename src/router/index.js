@@ -41,7 +41,7 @@ export const constantRouterMap = [
   {
     path: '/dashboard',
     component: Layout,
-    meta: { title: '首页' }
+    meta: { title: '首页', icon: 'index' }
   },
 
   {
@@ -147,8 +147,15 @@ export const constantRouterMap = [
         meta: { title: '新闻列表' }
       },
       {
-        path: 'removeNews',
+        path: 'addNews',
+        component: () => import('@/views/newsManage/create'),
         meta: { title: '添加新闻' }
+      },
+      {
+        path: 'editNews/:id(\\d+)',
+        name: 'EditNews',
+        hidden: true,
+        component: () => import('@/views/newsManage/edit')
       }
     ]
   },
@@ -157,7 +164,8 @@ export const constantRouterMap = [
     component: Layout,
     meta: {
       title: '系统管理',
-      roles: ['admin']
+      roles: ['admin'],
+      icon: 'lock'
     },
     children: [{
       path: 'character',
@@ -177,8 +185,8 @@ export const constantRouterMap = [
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'https://github.com/nbh520/vue-news-manage',
+        meta: { title: '项目地址', icon: 'link' }
       }
     ]
   },

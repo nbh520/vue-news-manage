@@ -7,7 +7,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">News</div>
-          <count-to :start-val="0" :end-val="NewsLength" :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="newsLength" :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -18,7 +18,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">Comment</div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="commentLength" :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -29,7 +29,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">User</div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="userLength" :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -40,7 +40,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">Video</div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val="videoLength" :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -50,6 +50,9 @@
 <script>
 import CountTo from 'vue-count-to'
 import { articleLength } from '@/api/article'
+import { getALLCommentLength } from '@/api/comment'
+import { getALLUserLength } from '@/api/user'
+import { getALLVideoLength } from '@/api/video'
 
 export default {
   name: 'PanelGroup',
@@ -58,12 +61,25 @@ export default {
   },
   data() {
     return {
-      NewsLength: 100
+      AllNewsLength: {},
+      newsLength: 0,
+      videoLength: 0,
+      userLength: 0,
+      commentLength: 0
     }
   },
   created() {
     articleLength().then(res => {
-      this.NewsLength = res.data
+      this.newsLength = res.data
+    })
+    getALLCommentLength().then(res => {
+      this.commentLength = res.data
+    })
+    getALLUserLength().then(res => {
+      this.userLength = res.data
+    })
+    getALLVideoLength().then(res => {
+      this.videoLength = res.data
     })
   },
   methods: {

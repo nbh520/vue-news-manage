@@ -113,6 +113,7 @@ export default {
   methods: {
     handleSetLineChartData(type) {
       this.lineChartData = this.allLineChartData[type]
+      console.log(this.lineChartData)
     }
   }
 }
