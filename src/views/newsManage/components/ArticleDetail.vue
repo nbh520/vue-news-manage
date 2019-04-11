@@ -4,7 +4,7 @@
     <el-form ref="articleForm" :model="articleForm" label-width="50px">
 
       <sticky :class-name="'sub-navbar ' + articleForm.status">
-        <el-button style="margin-left: 10px;" type="success">
+        <el-button style="margin-left: 10px;" type="success" @click="publishedForm">
           发布
         </el-button>
         <el-button type="warning"  @click="draftForm">草稿</el-button>
@@ -44,7 +44,7 @@
 <script>
 import Tinymce from '@/components/Tinymce'
 import Sticky from '@/components/Sticky'
-import { getNewsById } from '@/api/article'
+import { getNewsById, updateNewsStatusById } from '@/api/article'
 export default {
   name: 'ArticleDetail',
   components: {
@@ -95,13 +95,42 @@ export default {
         showClose: true,
         duration: 1000
       })
+      if (this.articleForm.id) {
+        updateNewsStatusById(this.articleForm.id, "draft").then(res => {
+          if (res.status === 1) {
+            this.$message({
+              message: '保存为草稿',
+              type: 'success',
+              showClose: true,
+              duration: 1000
+            })
+            this.articleForm.status = 'draft'
+          }
+        })
+      } 
     },
     fetchData(id) {
       getNewsById(id).then(res => {
         this.articleForm = res.data
         console.log(res.data)
       })
+    },
+    publishedForm() {
+      if (this.articleForm.id) {
+        updateNewsStatusById(this.articleForm.id, "published").then(res => {
+          if (res.status === 1) {
+            this.$message({
+              message: '发布成功',
+              type: 'success',
+              showClose: true,
+              duration: 1000
+            })
+            this.articleForm.status = 'published'
+          }
+        })
+      }  
     }
+
   }
 }
 

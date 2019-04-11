@@ -139,15 +139,19 @@ export const constantRouterMap = [
   {
     path: '/newsManage',
     component: Layout,
+    name: 'newsManage',
+    redirect: '/newsManage/newsList',
     meta: { title: '新闻管理', icon: 'manage' },
     children: [
       {
         path: 'newsList',
+        name: 'newsList',
         component: () => import('@/views/newsManage/list'),
         meta: { title: '新闻列表' }
       },
       {
         path: 'addNews',
+        name: 'addNews',
         component: () => import('@/views/newsManage/create'),
         meta: { title: '添加新闻' }
       },
