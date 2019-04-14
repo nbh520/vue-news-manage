@@ -1,12 +1,12 @@
 <!--  -->
 <template>
-  <article-detail :isEdit="true" />
+  <article-detail :is-edit="true" />
 </template>
 
 <script>
 import ArticleDetail from './components/ArticleDetail'
 export default {
-  name: 'editNews',
+  name: 'EditNews',
   components: {
     ArticleDetail
   }

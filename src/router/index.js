@@ -157,8 +157,9 @@ export const constantRouterMap = [
       },
       {
         path: 'editNews/:id(\\d+)',
-        name: 'EditNews',
+        name: 'EditArticle',
         hidden: true,
+        meta: { title: '编辑新闻' },
         component: () => import('@/views/newsManage/edit')
       }
     ]

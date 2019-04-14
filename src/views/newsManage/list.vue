@@ -7,7 +7,7 @@
       <el-table-column align="center" prop="author" label="Author" />
       <el-table-column align="center" prop="status" label="Status" min-width="100px">
         <template slot-scope="scope">
-          <el-tag  :type="scope.row.status | statusFilter">
+          <el-tag :type="scope.row.status | statusFilter">
             <span>{{ scope.row.status }}</span>
           </el-tag>
         </template>
@@ -27,7 +27,7 @@
           <router-link :to="'/newsManage/editNews/'+scope.row.id">
             <el-button type="primary" size="small" icon="el-icon-edit">Edit</el-button>
           </router-link>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteNews(scope.row.id, scope.row)">Delete</el-button>
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="deleteNews(scope.row.id)">Delete</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -82,16 +82,16 @@ export default {
       this.getList()
     },
     // 改变新闻删除状态
-    deleteNews(id, row) {
-      updateNewsStatusById(id, "del").then(res => {
+    deleteNews(id) {
+      updateNewsStatusById(id, 'del').then(res => {
         if (res.status === 1) {
           this.$message({
             message: '删除成功',
             type: 'success',
             showClose: true,
             duration: 1000
-          })     
-          this.getList()     
+          })
+          this.getList()
         }
       })
     }
