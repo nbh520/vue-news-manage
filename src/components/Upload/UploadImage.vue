@@ -6,7 +6,7 @@
       <i class="el-icon-upload" />
       <div class="el-upload_text"><em>上传封面图</em></div>
     </el-upload>
-    <div class="image-preview image-app-preview" v-for="(image, index) in imagesArr" :key="index">
+    <div v-for="(image, index) in imagesArr" :key="index" class="image-preview image-app-preview" >
       <div class="image-preview-wrapper">
         <img :src="image">
         <div class="image-preview-action">
@@ -45,7 +45,6 @@ export default {
         type: 'danger'
       }).then(() => {
         this.imagesArr = this.imagesArr.splice(index, 1)
-        console.log(imagesArr)
         this.$message({
           message: '删除成功',
           type: 'success',
