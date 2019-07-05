@@ -47,7 +47,6 @@ const permission = {
       return new Promise(resolve => {
         const { roles } = data
         let accessedRoutes
-        console.log(constantRouterMap)
         if (roles.includes('admin')) {
           accessedRoutes = asyncRoutes
         } else {

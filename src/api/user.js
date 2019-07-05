@@ -19,3 +19,15 @@ export const getALLUserLength = () => request({
   url: 'user/getALLUserLength',
   method: 'get'
 })
+
+// 获取用户列表
+export const getUserList = ({ pageSize = 10, pageIndex = 1, keyword = '', mark = '' }) => request({
+  url: 'user/getUserList',
+  method: 'get',
+  params: {
+    pageSize,
+    pageIndex,
+    keyword,
+    mark
+  }
+})

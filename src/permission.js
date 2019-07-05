@@ -21,8 +21,6 @@ router.beforeEach((to, from, next) => {
           const roles = res.data.roles
           store.dispatch('GenerateRoutes', { roles }).then(accessRoutes => {
             router.addRoutes(accessRoutes)
-            console.log(accessRoutes)
-            console.log(router)
             next({ ...to, replace: true })
           })
         }).catch((err) => {

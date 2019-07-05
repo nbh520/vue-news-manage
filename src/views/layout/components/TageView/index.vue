@@ -1,17 +1,17 @@
 <template>
   <div id="tags-view-container" class="tags-view-container">
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
-      <router-link
-       v-for="tag in visitedViews" 
-       ref="tag" 
-       :key="tag.path" 
-       :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-       tag="span"
-       class="tags-view-item"
-      >
+      <router-link v-for="tag in visitedViews" ref="tag" :key="tag.path" :class="isActive(tag)? 'active' : ''" :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }" tag="span" class="tags-view-item" @click.middle.native="closeSelectedTag(tag)" @contextmenu.prevent.native="openMenu(tag,$event)">
         {{ tag.title }}
+        <span v-if="!tag.meta.affix" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
+    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
+      <li @click="refreshSelectedTag(selectedTag)">Refresh</li>
+      <li v-if="!(selectedTag.meta&&selectedTag.meta.affix)" @click="closeSelectedTag(selectedTag)">Close</li>
+      <li>Close Others</li>
+      <li>Close All</li>
+    </ul>
   </div>
 </template>
 
@@ -40,6 +40,13 @@ export default {
   watch: {
     $route() {
       this.addTags()
+    },
+    visible(value) {
+      if (value) {
+        document.body.addEventListener('click', this.closeMenu)
+      } else {
+        document.body.removeEventListener('click', this.closeMenu)
+      }
     }
   },
   mounted() {
@@ -47,6 +54,9 @@ export default {
     this.addTags()
   },
   methods: {
+    isActive(route) {
+      return route.path === this.$route.path
+    },
     filterAffixTags(routes, basePath = '/') {
       let tags = []
       routes.forEach(route => {
@@ -70,7 +80,6 @@ export default {
     },
     initTags() {
       const affixTags = this.affixTags = this.filterAffixTags(this.routes)
-      console.log(affixTags)
       for (const tag of affixTags) {
         if (tag.name) {
           this.$store.dispatch('addVisitedView', tag)
@@ -83,6 +92,55 @@ export default {
         this.$store.dispatch('addView', this.$route)
       }
       return false
+    },
+    closeSelectedTag(view) {
+      this.$store.dispatch('delView', view).then(({ visitedViews }) => {
+        if (this.isActive(view)) {
+          this.toLastView(visitedViews, view)
+        }
+      })
+    },
+    toLastView(visitedViews, view) {
+      const latestView = visitedViews.slice(-1)[0]
+      if (latestView) {
+        this.$router.push(latestView)
+      } else {
+        if (view.name === 'Dashboard') {
+          this.$router.replace({ path: '/redirect' + view.fullPath })
+        } else {
+          this.$router.push('/')
+        }
+      }
+    },
+    openMenu(tag, e) {
+      const menuMinWidth = 105
+      const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
+      const offsetWidth = this.$el.offsetWidth // container width
+      const maxLeft = offsetWidth - menuMinWidth // left boundary
+      const left = e.clientX - offsetLeft + 15 // 15: margin right
+
+      if (left > maxLeft) {
+        this.left = maxLeft
+      } else {
+        this.left = left
+      }
+
+      this.top = e.clientY
+      this.visible = true
+      this.selectedTag = tag
+    },
+    closeMenu() {
+      this.visible = false
+    },
+    refreshSelectedTag(view) {
+      this.$store.dispatch('delCachedView', view).then(() => {
+        const { fullPath } = view
+        this.$nextTick(() => {
+          this.$router.replace({
+            path: '/redirect' + fullPath
+          })
+        })
+      })
     }
   }
 }
@@ -150,6 +208,32 @@ export default {
       cursor: pointer;
       &:hover {
         background: #eee;
+      }
+    }
+  }
+}
+</style>
+
+<style lang="scss" rel="stylesheet/scss">
+//reset element css of el-icon-close
+.tags-view-wrapper {
+  .tags-view-item {
+    .el-icon-close {
+      width: 16px;
+      height: 16px;
+      vertical-align: 2px;
+      border-radius: 50%;
+      text-align: center;
+      transition: all .3s cubic-bezier(.645, .045, .355, 1);
+      transform-origin: 100% 50%;
+      &:before {
+        transform: scale(.6);
+        display: inline-block;
+        vertical-align: -3px;
+      }
+      &:hover {
+        background-color: #b4bccc;
+        color: #fff;
       }
     }
   }

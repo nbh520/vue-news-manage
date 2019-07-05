@@ -34,6 +34,7 @@ export const constantRouterMap = [
     hidden: true,
     children: [{
       path: 'dashboard',
+      name: 'Dashboard',
       component: () => import('@/views/dashboard/index')
     }]
   },
@@ -175,12 +176,15 @@ export const constantRouterMap = [
     },
     children: [{
       path: 'character',
+      name: 'Character',
+      component: () => import('@/views/systemManage/user'),
       meta: {
         title: '角色管理'
       }
     },
     {
       path: 'user',
+      name: 'User',
       meta: {
         title: '用户管理'
       }
