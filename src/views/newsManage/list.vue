@@ -1,6 +1,18 @@
 <!-- 新闻列表 -->
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-input v-model="listQuery.title" style="width: 200px" class="filter-item" placeholder="Title"/>
+      <el-select v-model="listQuery.status" placeholder="Status" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
+      </el-select>
+      <el-button v-permission="['admin']" class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        Search
+      </el-button>
+      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+        Export
+      </el-button>
+    </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width:100%">
       <el-table-column align="center" prop="id" label="ID" width="50" />
       <el-table-column align="center" prop="update_time" label="Date" width="160" />
@@ -38,9 +50,12 @@
 <script>
 import Pagination from '@/components/Pagination'
 import { articleList, updateNewsStatusById } from '@/api/article'
+import permission from '@/directive/permission/index.js'
+import { parseTime } from '@/utils'
 export default {
   name: 'List',
   components: { Pagination },
+  directives: { permission },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -58,20 +73,26 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20
-      }
+        limit: 20,
+        title: undefined,
+        author: undefined,
+        status: undefined,
+        sort: '+id'
+      },
+      importanceOptions: ['published', 'draft', 'del'], // 筛选状态  草稿、发布、删除
+      downloadLoading: false // 下载loading
     }
   },
   created() {
     this.getList()
   },
   methods: {
-    getList() {
-      articleList(this.listQuery).then(res => {
-        this.list = res.data.items
-        this.total = res.data.total
-        this.listLoading = false
-      })
+    async getList() {
+      this.listLoading = true
+      const res = await articleList(this.listQuery)
+      this.list = res.data.items
+      this.total = res.data.total
+      this.listLoading = false
     },
     handleSizeChange(val) {
       this.listQuery.limit = val
@@ -94,6 +115,35 @@ export default {
           this.getList()
         }
       })
+    },
+    // 搜索
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
+    // 下载
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['Id', 'Date', 'Title', 'Author', 'Stauts', 'vote', 'reply', 'category']
+        const filterVal = ['id', 'create_time', 'title', 'author', 'status', 'voteCount', 'commentCount', 'category']
+        const data = this.formatJson(filterVal, this.list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'table-list'
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'timestamp') {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
     }
   }
 }
@@ -105,5 +155,5 @@ export default {
     color: #337ab7;
     cursor: pointer;
   }
-</style>
 
+</style>

@@ -213,7 +213,8 @@ export default new Router({
 export const asyncRoutes = [
   {
     path: '/systemManage',
-    component: Layout,
+    component: () => import('@/views/systemManage/user'),
+    name: 'Role',
     meta: {
       title: '系统管理',
       roles: ['admin']
@@ -230,5 +231,17 @@ export const asyncRoutes = [
         title: '用户管理'
       }
     }]
+  },
+  {
+    path: '/test',
+    component: Layout,
+    meta: { title: 'test', icon: 'link' },
+    name: 'Test',
+    children: [
+      {
+        path: 'https://github.com/nbh520/vue-news-manage',
+        meta: { title: 'test', icon: 'link' }
+      }
+    ]
   }
 ]
